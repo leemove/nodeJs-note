@@ -30,3 +30,40 @@ new Promise(function (resolve, reject) {
 ```
 
 这段代码会在2秒后输出233,可以理解成和浏览器一样的操作,注册一个吃饭事件,当我们"吃饭了"就会触发这个事件.同时可以向事件传递多个playload.
+
+## 几个特殊的事件
+
+### newListener
+
+  当该实例新增加一个事件监听的时候会触发`newListener`事件,回调函数的第一个参数就是事件的名称.
+
+  如果在这个事件中再注册一个新的事件那么就会形成递归.有趣的事如果在这个事件中再一次注册注册过的事件,那么会优先触发这个事件中注册的事件.听上去可能很复杂,可以看看代码.
+
+```js
+const EventEmitter  = require ('events')
+
+class MyEvent extends EventEmitter {}
+
+const chifan = new MyEvent()
+
+chifan.once('newListener',function (event)  {
+  console.log(`注册了${event}事件的监听器`)
+  this.on(event, () => {console.log('在newListener中注册的事件被触发了')})
+})
+chifan.on('eat', function () {
+  process.nextTick(() => {
+    console.log('正常注册的事件')
+  })
+})
+new Promise(function (resolve, reject) {
+  setTimeout(function() {
+    chifan.emit('eat')
+    return Promise.resolve(2)
+  }, 2000);
+})
+//- 会有如下输出
+
+// 注册了eat事件的监听器
+// 在newListener中注册的事件被触发了
+// 正常注册的事件
+```
