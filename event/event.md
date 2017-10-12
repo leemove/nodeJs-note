@@ -146,6 +146,9 @@ chifan.on('eat', function () {
 chifan.removeAllListeners('eat')
 //触发事件
 chifan.emit('eat')
-
 //- 没有输出
 ```
+
+## 1.5. 事件的注册数量限制
+
+  为了防止内存泄露,nodeJs默认允许一个对象上注册 10个事件.可以获取`getMaxListeners`,设置`setMaxListeners`这个值.

@@ -14,6 +14,4 @@ chifan.on('eat', function () {
 
 chifan.removeAllListeners('eat')
 //触发事件
-chifan.emit('eat')
-
 //- 没有输出
