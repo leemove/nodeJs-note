@@ -1,10 +1,10 @@
-# NodeJs简述event
+# 1. NodeJs简述event
 
 NodeJS选用Javascript语言作为基本语言的一个原因就是,js是天生异步.js的异步主要就是靠`事件循环`.事件作为浏览器端js的核心特性之一,在node端也同样重要.
 
 在NodeJs中提供了一系列操作`event`的API.
 
-## 一个最简单的事件
+## 1.1. 一个最简单的事件
 
 ```js
 // 引入Node扩展API
@@ -31,9 +31,9 @@ new Promise(function (resolve, reject) {
 
 这段代码会在2秒后输出233,可以理解成和浏览器一样的操作,注册一个吃饭事件,当我们"吃饭了"就会触发这个事件.同时可以向事件传递多个playload.
 
-## 几个特殊的事件
+## 1.2. 几个特殊的事件
 
-### newListener
+### 1.2.1. newListener
 
   当该实例新增加一个事件监听的时候会触发`newListener`事件,回调函数的第一个参数就是事件的名称.
 
@@ -66,4 +66,32 @@ new Promise(function (resolve, reject) {
 // 注册了eat事件的监听器
 // 在newListener中注册的事件被触发了
 // 正常注册的事件
+```
+
+### 1.2.2. removeListener
+
+  当你移除一个事件监听的时候就会触发这个事件.
+
+```js
+const EventEmitter  = require ('events')
+
+class MyEvent extends EventEmitter {}
+
+const chifan = new MyEvent()
+
+// 注册一个eat事件
+chifan.on('eat', function () {
+  process.nextTick(() => {
+    console.log('正常注册的事件')
+  })
+})
+
+//注册移除事件时候触发的特殊事件
+chifan.once('removeListener', (event) => console.log('已经移除了事件' + event))
+
+//移除所有eat事件的监听
+
+chifan.removeAllListeners('eat')
+//- 已经移除了事件eat
+
 ```
