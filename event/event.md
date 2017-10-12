@@ -95,3 +95,57 @@ chifan.removeAllListeners('eat')
 //- 已经移除了事件eat
 
 ```
+
+## 1.3. 事件的触发顺序
+
+  正常注册的事件触发的顺序是按照注册顺序倒叙触发的.有的事件要最优先执行那么可以调用`prependListener`方法来注册一个事件.当然也提供了`prependOnceListener`方法,也就是只触发一次.
+
+```javascript
+
+const EventEmitter = require('events')
+
+class MyEvent extends EventEmitter {}
+
+const chifan = new MyEvent()
+
+// 注册一个eat事件
+
+chifan.on('eat', function () {
+    process.nextTick(() => {
+      console.log('正常注册的事件1')
+    })
+  })
+  .on('eat', () => console.log('正常注册的事件2'))
+  .prependListener('eat', () => console.log('非正常注册的事件3'))
+
+//触发事件
+chifan.emit('eat')
+
+```
+
+## 1.4. 移除已经注册的事件
+
+- `removeAllListeners`移除所有名称一样的事件
+- `removeListener`移除一个指定的事件
+
+```js
+const EventEmitter = require('events')
+
+class MyEvent extends EventEmitter {}
+
+const chifan = new MyEvent()
+
+// 注册一个eat事件
+
+chifan.on('eat', function () {
+    process.nextTick(() => {
+      console.log('事件被触发了')
+    })
+  })
+
+chifan.removeAllListeners('eat')
+//触发事件
+chifan.emit('eat')
+
+//- 没有输出
+```

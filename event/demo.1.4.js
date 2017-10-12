@@ -8,11 +8,12 @@ const chifan = new MyEvent()
 
 chifan.on('eat', function () {
     process.nextTick(() => {
-      console.log('正常注册的事件1')
+      console.log('事件被触发了')
     })
   })
-  .on('eat', () => console.log('正常注册的事件2'))
-  .prependListener('eat', () => console.log('非正常注册的事件3'))
 
+chifan.removeAllListeners('eat')
 //触发事件
 chifan.emit('eat')
+
+//- 没有输出
